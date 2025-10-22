@@ -6,6 +6,8 @@ import { ProfilePage } from "./pages/ProfilePage";
 import { ChatbotPage } from "./pages/ChatbotPage";
 import { ResumePage } from "./pages/ResumePage";
 import { SharedResumePage } from "./pages/SharedResumePage";
+import { RecruiterLoginPage } from "./pages/RecruiterLoginPage";
+import { RecruiterDashboard } from "./pages/RecruiterDashboard";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -31,11 +33,20 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/recruiter-login" element={<RecruiterLoginPage />} />
           <Route
             path="/dashboard"
             element={
               <PrivateRoute>
                 <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/recruiter-dashboard"
+            element={
+              <PrivateRoute>
+                <RecruiterDashboard />
               </PrivateRoute>
             }
           />

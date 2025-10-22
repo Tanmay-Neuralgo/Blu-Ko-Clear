@@ -7,6 +7,7 @@ import { useAuth } from "../contexts/AuthContext";
 
 export function LandingPage() {
   const [showSignUp, setShowSignUp] = useState(true);
+  const [userType, setUserType] = useState<"worker" | "recruiter">("worker");
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -86,21 +87,77 @@ export function LandingPage() {
 
           <div className="w-full lg:w-auto lg:flex-shrink-0">
             <div className="bg-[#003A6E] bg-opacity-50 backdrop-blur-lg border border-[#6A7B93] border-opacity-20 rounded-2xl shadow-2xl p-8 w-full lg:w-[450px]">
-              <div className="mb-8">
+              <div className="mb-6">
                 <h2 className="text-3xl font-bold text-white mb-2">
                   {showSignUp ? "Create Account" : "Welcome Back"}
                 </h2>
                 <p className="text-[#A8B8CC]">
                   {showSignUp
                     ? "Start building your professional resume today"
-                    : "Sign in to continue building your resume"}
+                    : "Sign in to continue"}
                 </p>
               </div>
 
-              {showSignUp ? (
-                <SignUpForm onToggle={() => setShowSignUp(false)} />
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-[#A8B8CC] mb-3">
+                  I am a:
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setUserType("worker");
+                      if (!showSignUp && userType === "recruiter") {
+                        navigate("/");
+                      }
+                    }}
+                    className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 ${
+                      userType === "worker"
+                        ? "bg-[#FBC888] text-[#002B5C]"
+                        : "bg-[#1E4C80] text-white hover:bg-[#2A5A90]"
+                    }`}
+                  >
+                    Worker
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setUserType("recruiter");
+                      if (!showSignUp) {
+                        navigate("/recruiter-login");
+                      }
+                    }}
+                    className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 ${
+                      userType === "recruiter"
+                        ? "bg-[#FBC888] text-[#002B5C]"
+                        : "bg-[#1E4C80] text-white hover:bg-[#2A5A90]"
+                    }`}
+                  >
+                    Recruiter
+                  </button>
+                </div>
+              </div>
+
+              {userType === "worker" ? (
+                <>
+                  {showSignUp ? (
+                    <SignUpForm onToggle={() => setShowSignUp(false)} />
+                  ) : (
+                    <SignInForm onToggle={() => setShowSignUp(true)} />
+                  )}
+                </>
               ) : (
-                <SignInForm onToggle={() => setShowSignUp(true)} />
+                <div className="text-center py-8">
+                  <p className="text-[#A8B8CC] mb-4">
+                    Recruiter login is on a separate page
+                  </p>
+                  <button
+                    onClick={() => navigate("/recruiter-login")}
+                    className="bg-[#FBC888] hover:bg-[#FBC888]/90 text-[#002B5C] font-medium py-3 px-6 rounded-lg transition-all duration-200"
+                  >
+                    Go to Recruiter Login
+                  </button>
+                </div>
               )}
             </div>
           </div>
